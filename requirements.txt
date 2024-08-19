@@ -1,4 +1,8 @@
 pandas
+datasets
+regex
+transformers
+torch
 numpy
 scikit-learn==1.4.2
 tensorflow==2.15.0
