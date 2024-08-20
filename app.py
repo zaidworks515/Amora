@@ -71,7 +71,7 @@ def ml():
         p_class = 'NAO-OPORTUNIDADE'
     
     confidence_percentage = confidence * 100
-    response = jsonify({'Class': p_class, 'Confidence': f'{confidence_percentage:.2f}'})
+    response = jsonify({'Class': p_class, 'Confidence': f'{confidence_percentage:.2f}%'})
         
     return response
 
@@ -101,7 +101,7 @@ def ann():
     else:
         p_class = 'NAO-OPORTUNIDADE'
     
-    response = jsonify({'Class': p_class, 'Confidence': f'{confidence_percentage:.2f}'})
+    response = jsonify({'Class': p_class, 'Confidence': f'{confidence_percentage:.2f}%'})
     return response
 
 
@@ -155,7 +155,7 @@ def updated_model():
     output, confidence = display_prediction(input_text, model, tokenizer)
     
     confidence = float(confidence) * 100
-    formatted_confidence = f'{confidence:.2f}'
+    formatted_confidence = f'{confidence:.2f}%'
         
     response = jsonify({'Class': output, 'Confidence': formatted_confidence})
     
