@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Decode SSH Key
+      - name: Set up SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 --decode > private_key.pem
-          chmod 600 private_key.pem  # Fix key permissions
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem  # Directly store key
+          chmod 600 private_key.pem  # Secure permissions
 
       - name: Deploy to Server
         run: |
