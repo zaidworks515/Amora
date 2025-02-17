@@ -1,0 +1,47 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Decode SSH Key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 --decode > private_key.pem
+          chmod 600 private_key.pem  # Fix key permissions
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem measuremates-vm001@20.102.119.98 << 'EOF'
+            cd ~/amora
+
+            # Ensure Python 3.8 is installed
+            sudo apt update
+            sudo apt install -y python3.8 python3.8-venv python3.8-dev
+
+            # Create virtual environment if not exists
+            if [ ! -d "venv" ]; then
+              python3.8 -m venv venv
+            fi
+
+            source venv/bin/activate  # Activate virtual environment
+
+            # Ensure pip is up to date
+            pip install --upgrade pip
+
+            git pull origin main  # Pull latest changes
+
+            pip install -r requirements.txt  # Install dependencies
+
+            sudo systemctl daemon-reload  # Reload systemd
+            sudo systemctl restart amora.service  # Restart application
+            sudo systemctl status amora.service --no-pager --lines=50  # Show logs
+          EOF
