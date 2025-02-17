@@ -49,3 +49,4 @@ jobs:
             sudo systemctl daemon-reload  # Reload systemd
             sudo systemctl restart amora.service  # Restart application
             sudo systemctl status amora.service --no-pager --lines=50  # Show logs
+          debug: true
