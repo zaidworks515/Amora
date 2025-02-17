@@ -9,18 +9,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:  
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem  # Directly store key
-          chmod 600 private_key.pem  # Secure permissions
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem  # Store the SSH private key
+          chmod 600 private_key.pem  # Set proper permissions for the private key
 
-      - name: Deploy to Server
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem measuremates-vm001@20.102.119.98 << 'EOF'
+      - name: Deploy to Server using SSH
+        uses: appleboy/ssh-action@v0.1.0
+        with:
+          host: 20.102.119.98  # The IP of your server
+          username: measuremates-vm001  # Your server username
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # The SSH private key stored in GitHub secrets
+          port: 22  # The SSH port (default is 22)
+          script: |
             cd ~/amora
 
             # Ensure Python 3.8 is installed
@@ -44,4 +49,3 @@ jobs:
             sudo systemctl daemon-reload  # Reload systemd
             sudo systemctl restart amora.service  # Restart application
             sudo systemctl status amora.service --no-pager --lines=50  # Show logs
-          EOF

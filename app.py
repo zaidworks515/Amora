@@ -176,7 +176,7 @@ def warm_up_model():
 if __name__ == "__main__":
     warm_up_model()  
     try:
-        app.run(debug=True, host='0.0.0.0', threaded=True)
+        app.run(debug=True, host='0.0.0.0', threaded=True, port=5002)
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
